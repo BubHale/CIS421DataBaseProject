@@ -1,0 +1,179 @@
+CREATE SCHEMA IF NOT EXISTS 421_project3;
+
+USE 421_project3;
+
+CREATE TABLE `customer` (
+   `custID` varchar(45) NOT NULL,
+   `numOrders` int DEFAULT NULL,
+   PRIMARY KEY (`custID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `dasher` (
+   `dashID` varchar(45) NOT NULL,
+   `hireDate` date DEFAULT NULL,
+   `numDeliveries` int DEFAULT NULL,
+   PRIMARY KEY (`dashID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `orders` (
+   `OrderNum` varchar(45) NOT NULL,
+   `custID` varchar(45) DEFAULT NULL,
+   `DashID` varchar(45) DEFAULT NULL,
+   PRIMARY KEY (`OrderNum`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `order_details` (
+   `orderNum` varchar(45) NOT NULL,
+   `restaurantID` varchar(50) DEFAULT NULL,
+   `orderDate` date DEFAULT NULL,
+   `orderAmount` decimal(5,2) DEFAULT NULL,
+   `delivTime` datetime(2) DEFAULT NULL,
+   `delivAddress` varchar(45) DEFAULT NULL,
+   PRIMARY KEY (`orderNum`),
+   KEY `restaurant` (`restaurantID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `phone_num` (
+   `userID` varchar(45) NOT NULL,
+   `phone` varchar(45) NOT NULL,
+   PRIMARY KEY (`userID`,`phone`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `restaurant` (
+   `restID` varchar(45) NOT NULL,
+   `restName` varchar(45) DEFAULT NULL,
+   `restAddress` varchar(45) DEFAULT NULL,
+   PRIMARY KEY (`restID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `users` (
+   `userID` varchar(45) NOT NULL,
+   `fName` varchar(45) DEFAULT NULL,
+   `lName` varchar(45) DEFAULT NULL,
+   `emailAddress` varchar(45) DEFAULT NULL,
+   PRIMARY KEY (`userID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `vehicle` (
+   `dashID` varchar(45) NOT NULL,
+   `Vmake` varchar(45) DEFAULT NULL,
+   `Vmodel` varchar(45) DEFAULT NULL,
+   `plate#` varchar(45) DEFAULT NULL,
+   PRIMARY KEY (`dashID`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE customer
+ADD CONSTRAINT customerToUser
+FOREIGN KEY (custID) REFERENCES users(userID);
+
+ALTER TABLE dasher
+ADD CONSTRAINT dasherToUser
+FOREIGN KEY (dashID) REFERENCES users(userID);
+
+ALTER TABLE orders
+ADD CONSTRAINT orderToOrderDetails 
+FOREIGN KEY (OrderNum) REFERENCES order_details (orderNum);
+
+ALTER TABLE order_details
+ADD CONSTRAINT orderDetailsToOrder 
+FOREIGN KEY (orderNum) REFERENCES orders (OrderNum);
+
+ALTER TABLE order_details
+ADD CONSTRAINT orderDetailsToRestaurant 
+FOREIGN KEY (restaurantID) REFERENCES restaurant (restID);
+
+ALTER TABLE phone_num
+ADD CONSTRAINT phoneToUser 
+FOREIGN KEY (userID) REFERENCES users (userID);
+
+ALTER TABLE restaurant
+ADD CONSTRAINT restaurantToOrderDetails 
+FOREIGN KEY (restID) REFERENCES order_details (restaurantID);
+
+ALTER TABLE users
+ADD CONSTRAINT userToCustomer 
+FOREIGN KEY (userID) REFERENCES customer (custID);
+
+ALTER TABLE users
+ADD CONSTRAINT userToDasher 
+FOREIGN KEY (userID) REFERENCES dasher (dashID);
+
+ALTER TABLE users
+ADD CONSTRAINT userToPhone 
+FOREIGN KEY (userID) REFERENCES phone_num (userID);
+
+ALTER TABLE users
+ADD CONSTRAINT userToVehicle 
+FOREIGN KEY (userID) REFERENCES vehicle (dashID);
+
+ALTER TABLE vehicle
+ADD CONSTRAINT vehicleToUser 
+FOREIGN KEY (dashID) REFERENCES users (userID);
+
+SET FOREIGN_KEY_CHECKS=0;
+
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u001', 'Dylan', 'Crompton', 'dcrompt@umich.edu');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u002', 'Adam', 'Yassine', 'adamyass@umich.edu');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u003', 'Dominic', 'Baughman', 'dom@umich.edu');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u004', 'Kevin', 'Kollovazi', 'kevtron@umich.edu');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u005', 'Andrew', 'Ramos', 'andystoys@umich.com');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u006', 'Ryan', 'Len', 'ryanstoyreviews@umich.edu');
+INSERT INTO `421_project3`.`users` (`userID`, `fName`, `lName`, `emailAddress`) VALUES ('u007', 'Sam', 'Hale', 'haleyes@umich.edu');
+
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u001', '1874628392');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u002', '8374859473');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u003', '2738493847');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u004', '1234253647');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u005', '1425364758');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u006', '6578987654');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u007', '2635478394');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u002', '7876563765');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u003', '6789876545');
+INSERT INTO `421_project3`.`phone_num` (`userID`, `phone`) VALUES ('u004', '6736456736');
+
+INSERT INTO `421_project3`.`customer` (`custID`, `numOrders`) VALUES ('u001', 1);
+INSERT INTO `421_project3`.`customer` (`custID`, `numOrders`) VALUES ('u002', 2);
+INSERT INTO `421_project3`.`customer` (`custID`, `numOrders`) VALUES ('u003', 3);
+INSERT INTO `421_project3`.`customer` (`custID`, `numOrders`) VALUES ('u004', 4);
+INSERT INTO `421_project3`.`customer` (`custID`, `numOrders`) VALUES ('u005', 5);
+
+INSERT INTO `421_project3`.`dasher` (`dashID`, `hireDate`, `numDeliveries`) VALUES ('u005', '2022-01-01', '12');
+INSERT INTO `421_project3`.`dasher` (`dashID`, `hireDate`, `numDeliveries`) VALUES ('u006', '2022-02-02', '22');
+INSERT INTO `421_project3`.`dasher` (`dashID`, `hireDate`, `numDeliveries`) VALUES ('u007', '2022-03-03', '222');
+
+INSERT INTO `421_project3`.`vehicle` (`dashID`, `Vmake`, `Vmodel`, `plate#`) VALUES ('u005', 'Ford', 'Pinto', 'BDF456');
+INSERT INTO `421_project3`.`vehicle` (`dashID`, `Vmake`, `Vmodel`, `plate#`) VALUES ('u006', 'Limo', 'Hummer', 'ACD456');
+INSERT INTO `421_project3`.`vehicle` (`dashID`, `Vmake`, `Vmodel`, `plate#`) VALUES ('u007', 'Chevy', 'Bolt', 'HGR783');
+
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order1', 'u001', 'u005');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order2', 'u002', 'u005');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order3', 'u003', 'u005');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order4', 'u005', 'u005');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order5', 'u004', 'u006');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order6', 'u001', 'u006');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order7', 'u005', 'u006');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order8', 'u002', 'u007');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order9', 'u003', 'u007');
+INSERT INTO `421_project3`.`orders` (`OrderNum`, `custID`, `DashID`) VALUES ('order10', 'u004', 'u007');
+
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order1', 'r1', '2022-02-03', '40.56', '2022-02-03 09:34:54', '2345 joy rd');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order2', 'r2', '2022-02-02', '32.65', '2022-02-02 12:19:06', '2345 beech daly');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order3', 'r5', '2022-02-07', '3.54', '2022-02-07 03:45:42', '654 telegraph rd');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order4', 'r6', '2022-02-04', '234.53', '2022-02-04 06:31:52', '3314 schoolcraft rd');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order5', 'r4', '2022-02-01', '24.56', '2022-02-02 10:41:23', '2345 ford rd');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order6', 'r3', '2022-02-03', '64.76', '2022-02-03 11:59:59', '9840 mine sq');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order7', 'r2', '2022-02-05', '100.99', '2022-02-05 07:13:15', '345 hello blvd');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order8', 'r6', '2022-02-05', '20.00', '2022-02-05 08:23:41', '762 jerome st');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order9', 'r4', '2022-02-01', '68.65', '2022-02-01 04:42:12', '874 king ave');
+INSERT INTO `421_project3`.`order_details` (`orderNum`, `restaurantID`, `orderDate`, `orderAmount`, `delivTime`, `delivAddress`) VALUES ('order10', 'r1', '2022-02-06', '34.76', '2022-02-06 03:23:33', '7634 whitney rd');
+
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r1', 'Gabagool', '1234 abbey st');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r2', 'Wal-Mart', '4213 ford rd');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r3', 'CVS', '6524 aberdine blvd');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r4', 'MunkeyBiznis', '5234 seattle st');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r5', 'KrustyKrab', '4124 romeo dr');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r6', 'PaneraBread', '4124 happytown rd');
+INSERT INTO `421_project3`.`restaurant` (`restID`, `restName`, `restAddress`) VALUES ('r7', 'OlgasKitchen', '29384 redford ave');
+
+SET FOREIGN_KEY_CHECKS=1;
+
